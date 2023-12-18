@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+@import 'animate.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: aliceblue;
+    font-family: 'Nunito', sans-serif;
+}
+
+body {
+    background-color: #151515;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+h2 {
+    font-family: 'Fredoka One', cursive;
+}
+
+p {
+    font-family: 'Nunito', sans-serif;
+}
+
+body::-webkit-scrollbar {
+    width: 8px;
+}
+
+body::-webkit-scrollbar-track {
+    background: #0A0A0A;
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: rgb(26, 26, 26);
+    border-radius: 20px;
+    /* border: 3px solid orange; */
+}
