@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "question": "Does the other person need Digital Card ?",
+    "answer": "No! When someone taps your  Smart Card or scans your QR code your profile will instantly appear on their device via a web browser. No app is needed for them to receive your information."
+  },
+  {
+    "id": 2,
+    "question": "How does it work? ",
+    "answer": "Our product is Digital Smart Business Card. Our cards have a built-in NFC chip. When you purchase a card, you have to create a profile. In your profile you may include name, designation, company name, website, social media links, address, email, phone number, profile picture etc.Once the profile is set your card is ready to use. Whenever you want to share your contact information with someone, just tap the card with his/her smartphone and your profile will show up on their screen. The other person does not need any app. They can then save your contact information and also send their contact information in your email.You can change your profile information anytime. The tap function only works with NFC enabled smartphones. If a smartphone does not have NFC then QR Code will work the same way."
+  },
+  {
+    "id": 3,
+    "question": "Do I need Digital Card 1000 pcs?",
+    "answer": "You only need one card. Our cards have a built-in NFC chip. All the information is stored digitally on our server. When you need to share your contact information, you just tap the card with the smartphone and your contact information automatically shows up on the screen.You do not have to give away the card. You keep the card with you at all times."
+  }
+]

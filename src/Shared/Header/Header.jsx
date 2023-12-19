@@ -54,8 +54,8 @@ const Header = () => {
           to="/"
           className={({ isActive }) =>
             isActive
-              ? "font-medium text-[16px]   text-white underline underline-offset-2 transition-colors duration-200 bg-transparent"
-              : "font-medium text-[16px]   text-gray-300 transition-colors duration-200 bg-transparent"
+              ? "font-medium text-[16px]    text-white underline underline-offset-2 transition-colors duration-200 bg-transparent"
+              : "font-medium text-[16px]    text-gray-300 transition-colors duration-200 bg-transparent"
           }
           end
         >
@@ -67,8 +67,8 @@ const Header = () => {
           to="/about"
           className={({ isActive }) =>
             isActive
-              ? "font-medium text-[16px]   text-white underline underline-offset-2 transition-colors duration-200 bg-transparent"
-              : "font-medium text-[16px]   text-gray-300 transition-colors duration-200 bg-transparent"
+              ? "font-medium text-[16px]    text-white underline underline-offset-2 transition-colors duration-200 bg-transparent"
+              : "font-medium text-[16px]    text-gray-300 transition-colors duration-200 bg-transparent"
           }
           end
         >
@@ -80,8 +80,8 @@ const Header = () => {
           to="/products"
           className={({ isActive }) =>
             isActive
-              ? "font-medium text-[16px]   text-white underline underline-offset-2 transition-colors duration-200 bg-transparent"
-              : "font-medium text-[16px]   text-gray-300 transition-colors duration-200 bg-transparent"
+              ? "font-medium text-[16px]    text-white underline underline-offset-2 transition-colors duration-200 bg-transparent"
+              : "font-medium text-[16px]    text-gray-300 transition-colors duration-200 bg-transparent"
           }
           end
         >
@@ -93,8 +93,8 @@ const Header = () => {
           to="/corporate"
           className={({ isActive }) =>
             isActive
-              ? "font-medium text-[16px]   text-white underline underline-offset-2 transition-colors duration-200 bg-transparent"
-              : "font-medium text-[16px]   text-gray-300 transition-colors duration-200 bg-transparent"
+              ? "font-medium text-[16px]    text-white underline underline-offset-2 transition-colors duration-200 bg-transparent"
+              : "font-medium text-[16px]    text-gray-300 transition-colors duration-200 bg-transparent"
           }
           end
         >
@@ -106,13 +106,23 @@ const Header = () => {
           to="/contact"
           className={({ isActive }) =>
             isActive
-              ? "font-medium text-[16px]   text-white underline underline-offset-2 transition-colors duration-200 bg-transparent"
-              : "font-medium text-[16px]   text-gray-300 transition-colors duration-200 bg-transparent"
+              ? "font-medium text-[16px]    text-white underline underline-offset-2 transition-colors duration-200 bg-transparent"
+              : "font-medium text-[16px]    text-gray-300 transition-colors duration-200 bg-transparent"
           }
           end
         >
           Contact Us
         </NavLink>
+      </li>
+      <li className="block lg:hidden">
+        <Link className="font-medium text-[16px]   text-gray-100 transition-colors duration-200 bg-transparent">
+          Login
+        </Link>
+        <div>
+          <Link className="font-medium text-[15px]  text-gray-100  bg-transparent outline outline-1 outline-red-500 p-2 rounded hover:bg-red-500  transition duration-150">
+            Create Your Card
+          </Link>
+        </div>
       </li>
     </>
   );
@@ -122,7 +132,7 @@ const Header = () => {
     <div
       className={
         scrolled
-          ? " w-full flex  items-center justify-between z-10 h-20 fixed top-0 bg-[#444444] animate__animated animate__fadeInDown animate-fast opacity-0"
+          ? " w-full flex  items-center justify-between z-10 h-20 fixed top-0 bg-[#232323] animate__animated animate__fadeInDown animate-fast opacity-0"
           : "flex items-center justify-between z-10 h-20 fixed top-0 w-full"
       }
     >
@@ -156,21 +166,25 @@ const Header = () => {
               {menuItems}
             </ul>
           </div>
-          <Link
-            to={"/"}
-            className="text-transparent bg-clip-text  bg-gradient-to-r from-purple-500 via-red-400 to-violet-200 text-xl md:text-2xl lg:text-3xl text-white font-bold "
-          >
+          <Link to={"/"} className="text-xl md:text-2xl lg:text-4xl font-bold ">
             Digital Card
           </Link>
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">{menuItems}</ul>
         </div>
-        <div className="navbar-end mx-5 flex items-center gap-2 md:gap-5">
-          <Link className="text-gray-800 btn btn-sm ">Login</Link>
+        <div className="navbar-end mx-5 flex items-center gap-2 md:gap-5 ">
+          <div className="hidden lg:block">
+            <Link className="font-medium text-[16px]   text-gray-100 transition-colors duration-200 bg-transparent">
+              Login
+            </Link>
+            <Link className="font-medium text-[15px] mx-2  text-gray-100  bg-transparent outline outline-1 outline-red-500 p-2 rounded-full hover:bg-red-500  transition duration-150">
+              Create Your Card
+            </Link>
+          </div>
           <div className="indicator">
-            <FaCartShopping className="text-white text-xl"/>
-            <span className="badge badge-sm indicator-item  font-bold">8</span>
+            <FaCartShopping className="text-white text-xl" />
+            <span className="badge badge-sm indicator-item  font-bold">0</span>
           </div>
         </div>
       </div>
