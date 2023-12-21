@@ -4,7 +4,7 @@ const OrderSetup = () => {
       <h2 className="text-4xl text-center font-medium mb-8">Order and Setup</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 items-center justify-center gap-5 ">
-        <div className="  bg-[#313131] rounded-lg flex justify-center items-center  shadow-xl h-44  ">
+        <div className="  bg-[#363636] rounded-lg flex justify-center items-center  shadow-xl h-44  ">
           <h1 className="text-5xl px-8 ">1</h1>
           <div className="divider divider-horizontal bg-white max-w-[2px]"></div>
           <div className="  p-2 ">
@@ -15,7 +15,7 @@ const OrderSetup = () => {
             </p>
           </div>
         </div>
-        <div className=" bg-[#313131] rounded-lg flex justify-center items-center  shadow-xl h-44  ">
+        <div className=" bg-[#363636] rounded-lg flex justify-center items-center  shadow-xl h-44  ">
           <h1 className="text-5xl px-8">2</h1>
           <div className="divider divider-horizontal bg-white max-w-[2px]"></div>
           <div className=" p-2 ">
@@ -26,7 +26,7 @@ const OrderSetup = () => {
             </p>
           </div>
         </div>
-        <div className=" bg-[#313131] rounded-lg flex justify-center items-center  shadow-xl h-44  ">
+        <div className=" bg-[#363636] rounded-lg flex justify-center items-center  shadow-xl h-44  ">
           <h1 className="text-5xl px-8">3</h1>
           <div className="divider divider-horizontal bg-white max-w-[2px]"></div>
           <div className=" p-2">

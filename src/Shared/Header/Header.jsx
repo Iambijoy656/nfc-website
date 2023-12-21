@@ -2,9 +2,11 @@
 import { Link, NavLink } from "react-router-dom";
 import { FaCartShopping } from "react-icons/fa6";
 import { useState } from "react";
+import LoginVariant from "./LoginVariant/LoginVariant";
 
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
+  const [isShowLogin, setIsShowLogin] = useState(false);
 
   window.onscroll = () => {
     if (window.scrollY > 100) {
@@ -118,9 +120,10 @@ const Header = () => {
         <Link className="font-medium text-[16px]   text-gray-100 transition-colors duration-200 bg-transparent">
           Login
         </Link>
+
         <div>
-          <Link className="font-medium text-[15px]  text-gray-100  bg-transparent outline outline-1 outline-red-500 p-2 rounded hover:bg-red-500  transition duration-150">
-            Create Your Card
+          <Link className="font-medium text-[15px]   text-gray-100  bg-transparent outline outline-1 outline-red-500 p-2 rounded hover:bg-red-500  transition duration-150">
+            Register
           </Link>
         </div>
       </li>
@@ -175,11 +178,33 @@ const Header = () => {
         </div>
         <div className="navbar-end mx-5 flex items-center gap-2 md:gap-5 ">
           <div className="hidden lg:block">
-            <Link className="font-medium text-[16px]   text-gray-100 transition-colors duration-200 bg-transparent">
-              Login
-            </Link>
-            <Link className="font-medium text-[15px] mx-2  text-gray-100  bg-transparent outline outline-1 outline-red-500 p-2 rounded-full hover:bg-red-500  transition duration-150">
-              Create Your Card
+            <div
+              onMouseEnter={() => setIsShowLogin(true)}
+              onMouseLeave={() => setIsShowLogin(false)}
+            >
+              <Link className=" absolute font-medium text-[16px]   text-gray-100 transition-colors duration-200 bg-transparent">
+                Login
+                {/* {isShowLogin && (
+                  <div className="relative ">
+                    <div
+                      className=" absolute bg-white w-full ml-2 pb-2 shadow-sm  animate__animated animate__fadeInUp animate__fast"
+                      onMouseEnter={() => setIsShowLogin(true)}
+                      // onMouseLeave={() => setIsShowLogin(false)}
+                    >
+                      <LoginVariant />
+                    </div>
+                  </div>
+                )} */}
+                {isShowLogin && (
+                  <div className="absolute z-50 top-10 left-0 right-0 animate__animated animate__fadeInUp animate__fast">
+                    <LoginVariant />
+                  </div>
+                )}
+              </Link>
+            </div>
+
+            <Link className="font-medium text-[15px] mx-2 px-5 text-gray-100  bg-transparent outline outline-1 outline-red-500 p-2 rounded-full hover:bg-red-500  transition duration-150">
+              Register
             </Link>
           </div>
           <div className="indicator">
