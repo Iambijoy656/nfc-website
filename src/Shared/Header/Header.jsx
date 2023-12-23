@@ -3,10 +3,12 @@ import { Link, NavLink } from "react-router-dom";
 import { FaCartShopping } from "react-icons/fa6";
 import { useState } from "react";
 import LoginVariant from "./LoginVariant/LoginVariant";
+import RegisterVariant from "./RegisterVariant/RegisterVariant";
 
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [isShowLogin, setIsShowLogin] = useState(false);
+  const [isShowRegister, setIsShowRegister] = useState(false);
 
   window.onscroll = () => {
     if (window.scrollY > 100) {
@@ -136,7 +138,7 @@ const Header = () => {
       className={
         scrolled
           ? " w-full flex  items-center justify-between z-10 h-20 fixed top-0 bg-[#232323] animate__animated animate__fadeInDown animate-fast opacity-0"
-          : "flex items-center justify-between z-10 h-20 fixed top-0 w-full"
+          : " flex items-center justify-between z-10 h-20 fixed top-0 w-full"
       }
     >
       <div className="navbar container">
@@ -177,36 +179,61 @@ const Header = () => {
           <ul className="menu menu-horizontal px-1">{menuItems}</ul>
         </div>
         <div className="navbar-end mx-5 flex items-center gap-2 md:gap-5 ">
-          <div className="hidden lg:block">
-            <div
-              onMouseEnter={() => setIsShowLogin(true)}
-              onMouseLeave={() => setIsShowLogin(false)}
-            >
-              <Link className=" absolute font-medium text-[16px]   text-gray-100 transition-colors duration-200 bg-transparent">
-                Login
-                {/* {isShowLogin && (
-                  <div className="relative ">
-                    <div
-                      className=" absolute bg-white w-full ml-2 pb-2 shadow-sm  animate__animated animate__fadeInUp animate__fast"
-                      onMouseEnter={() => setIsShowLogin(true)}
-                      // onMouseLeave={() => setIsShowLogin(false)}
-                    >
-                      <LoginVariant />
-                    </div>
-                  </div>
-                )} */}
+          <div className="hidden lg:block ">
+            <div className="flex items-center gap-2">
+              <div
+                onMouseEnter={() => setIsShowLogin(true)}
+                onMouseLeave={() => setIsShowLogin(false)}
+                className="  tracking-wide font-semibold p-4  relative "
+              >
+                <NavLink
+                  to="/"
+                  className={({ isActive }) =>
+                    isActive || location.pathname == "/"
+                      ? "nav-link text-gray-100  "
+                      : "nav-link text-[#363636]"
+                  }
+                >
+                  Login
+                </NavLink>
+
                 {isShowLogin && (
-                  <div className="absolute z-50 top-10 left-0 right-0 animate__animated animate__fadeInUp animate__fast">
+                  <div className="absolute z-50 top-[50px] left-0 right-0">
                     <LoginVariant />
                   </div>
                 )}
-              </Link>
-            </div>
+              </div>
+              {/* <div>
+                <Link className="font-medium text-[15px] mx-2 px-5 text-gray-100  bg-transparent outline outline-1 outline-red-500 p-2 rounded-full hover:bg-red-500  transition duration-150">
+                  Register
+                </Link>
+              </div> */}
 
-            <Link className="font-medium text-[15px] mx-2 px-5 text-gray-100  bg-transparent outline outline-1 outline-red-500 p-2 rounded-full hover:bg-red-500  transition duration-150">
-              Register
-            </Link>
+              <div
+                onMouseEnter={() => setIsShowRegister(true)}
+                onMouseLeave={() => setIsShowRegister(false)}
+                className="  font-medium text-[15px] mx-2 px-5 text-gray-100  bg-transparent outline outline-1 outline-red-500 rounded-full hover:bg-red-500  transition duration-150 p-3  relative "
+              >
+                <NavLink
+                  to="/"
+                  className={({ isActive }) =>
+                    isActive || location.pathname == "/"
+                      ? "nav-link text-gray-100  "
+                      : "nav-link text-[#363636]"
+                  }
+                >
+                  Registration
+                </NavLink>
+
+                {isShowRegister && (
+                  <div className="absolute z-50 top-[45px] left-0 right-0">
+                    <RegisterVariant />
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
+
           <div className="indicator">
             <FaCartShopping className="text-white text-xl" />
             <span className="badge badge-sm indicator-item  font-bold">0</span>
