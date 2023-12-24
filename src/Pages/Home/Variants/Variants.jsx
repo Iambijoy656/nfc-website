@@ -42,8 +42,8 @@ const Variants = () => {
       });
   }, [variant]);
 
-  console.log(templates);
-  console.log(variant);
+  // console.log(templates);
+  // console.log(variant);
   return (
     <section className="container">
       <div className=" flex flex-col justify-center px-4 py-8 mx-auto md:p-8">

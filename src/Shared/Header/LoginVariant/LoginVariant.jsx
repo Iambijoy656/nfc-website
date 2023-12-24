@@ -5,7 +5,7 @@ const LoginVariant = () => {
     <div className="flex flex-col justify-center items-start  bg-gray-100 w-[150px] my-[18px]">
       <Link
         className="text-[#37425c] hover:text-white hover:bg-[#363636] text-sm p-2 border-b  w-[150px]"
-        to={"/"}
+        to={"/customer-login"}
       >
         Customer Login
       </Link>
