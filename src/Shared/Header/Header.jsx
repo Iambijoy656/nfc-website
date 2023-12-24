@@ -11,7 +11,7 @@ const Header = () => {
   const [isShowRegister, setIsShowRegister] = useState(false);
 
   window.onscroll = () => {
-    if (window.scrollY > 100) {
+    if (window.scrollY > 80) {
       setScrolled(true);
     } else {
       setScrolled(false);
@@ -191,7 +191,7 @@ const Header = () => {
                   className={({ isActive }) =>
                     isActive || location.pathname == "/"
                       ? "nav-link text-gray-100  "
-                      : "nav-link text-[#363636]"
+                      : "nav-link "
                   }
                 >
                   Login
@@ -219,7 +219,7 @@ const Header = () => {
                   className={({ isActive }) =>
                     isActive || location.pathname == "/"
                       ? "nav-link text-gray-100  "
-                      : "nav-link text-[#363636]"
+                      : "nav-link "
                   }
                 >
                   Registration
