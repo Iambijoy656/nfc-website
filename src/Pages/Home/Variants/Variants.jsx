@@ -132,7 +132,7 @@ const Variants = () => {
 
                     <Link
                       className="p-3 px-8 mt-4 w-full text-center bg-[#363636] text-lg border border-[#363636]    text-gray-300 hover:text-gray-100 rounded-sm hover:bg-[#2e2e2e] hover:border hover:border-white transition duration-150"
-                      to={``}
+                      to={`/details/${template?._id}`}
                     >
                       Buy
                     </Link>

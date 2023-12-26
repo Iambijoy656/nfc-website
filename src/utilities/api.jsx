@@ -2,8 +2,8 @@ import Axios from "axios";
 
 // Create an axios instance with your baseURL
 const api = Axios.create({
-  // baseURL: "http://localhost:5001/api/v1/",
-  baseURL: "https://nfc-card-backend-iambijoy656.vercel.app/api/v1/",
+  baseURL: "http://localhost:5001/api/v1/",
+  // baseURL: "https://nfc-card-backend-iambijoy656.vercel.app/api/v1/",
 });
 
 api.defaults.headers.common["Access-Control-Allow-Origin"] = "*"; // Replace with the actual origin of your frontend
