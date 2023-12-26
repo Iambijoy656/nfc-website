@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import api from "../../utilities/api";
 import { FaFacebookF } from "react-icons/fa";
 import { FaTwitter } from "react-icons/fa";
@@ -10,7 +10,6 @@ import Loading from "../../Shared/Loading/Loading";
 
 const CustomerProfile = () => {
   const [loading, setLoading] = useState(true);
-  const { id: userId } = useParams();
 
   const [customer, setCustomer] = useState({});
 
@@ -44,9 +43,7 @@ const CustomerProfile = () => {
       }
     }
   }, [user?.customer, user?.role, user?.admin, token]);
-
-  console.log("customer", customer);
-  console.log("user", user.customer);
+  console.log(customer);
 
   //   const socialLink = [];
   return (
@@ -58,7 +55,7 @@ const CustomerProfile = () => {
           <div className="w-full flex flex-col items-center justify-center rounded-3 h-full md:h-80 overflow-hidden ">
             <img
               className="w-full"
-              src="https://www.usmartcards.co.uk/image/catalog/Applications/NFCbanner.jpg"
+              src="https://tapitag.co/cdn/shop/files/Untitled-5_aa7a71df-4ea4-44c2-a80b-23be51e034ef.png?v=1695208803&width=2400"
               alt="cover"
             />
           </div>
@@ -88,7 +85,7 @@ const CustomerProfile = () => {
               <h1 className="text-3xl font-bold  lg:pt-0">
                 {customer?.name?.firstName} {customer?.name?.lastName}
               </h1>
-              <p className="pt-2 flex items-center  px-10 text-sm justify-start text-justify md:text-center w-9/12 mx-auto">
+              <p className="pt-2 flex items-center  px-10 text-sm justify-start text-justify md:text-center sm:w-full lg:w-9/12 mx-auto">
                 {/* <svg
               className="h-4 fill-current text-green-700 pr-2"
               xmlns="http://www.w3.org/2000/svg"
@@ -129,18 +126,18 @@ const CustomerProfile = () => {
               ))}
             </div>
 
-            <div className="mx-auto lg:mx-0 w-4/5 pt-3 border-b-2 border-green-500 opacity-25"></div>
+            <div className="mx-auto lg:mx-0 w-4/5 pt-3 border-b-2 border-[#ef4444] opacity-25"></div>
             <div>
               <p className="pt-3 text-sm tracking-wide">
                 <b>Email :</b> {customer?.email}
               </p>{" "}
               <p className="pt-3 text-sm tracking-wide">
-                <b>Contact No :</b>
+                <b>Contact No: </b>
                 {customer?.contactNo}
               </p>
             </div>
           </div>
-          <div className="pb-8 flex items-center  justify-around md:justify-center  gap-2 ">
+          <div className="pb-8 flex items-center  justify-around md:justify-center  gap-2  -mt-5">
             {/* <button
           //   onClick={downloadContact}
           className="bg-green-700 hover:bg-green-900 text-sm  text-white font-bold py-2 px-4 rounded"
@@ -148,8 +145,8 @@ const CustomerProfile = () => {
           Update Profile
         </button>{" "} */}
             <Link
-              to={`/dashboard/customers/edit/${userId}`}
-              className="bg-green-700 hover:bg-green-900 text-sm text-white font-bold py-2 px-4 rounded capitalize tracking-wider w-44 text-center"
+              to={`/dashboard/customers/edit/${user?.customer}`}
+              className="font-medium text-[15px]   text-gray-100  bg-transparent outline outline-1 outline-red-500 p-2 rounded hover:bg-red-500  transition duration-150"
             >
               update profile
             </Link>
@@ -202,6 +199,96 @@ const CustomerProfile = () => {
             </Link>
           ))}
         </div> */}
+
+          <div className="container">
+            <div className="flex flex-col md:flex-row gap-4  mt-2 justify-between mr-4 ">
+              <h2 className="text-xl md:text-2xl px-5 font-bold text-red-500  ">
+                Your Members
+              </h2>
+
+              <div className=" px-4">
+                <div className=" flex items-center justify-start">
+                  <div className="relative mx-end w-max">
+                    <input
+                      type="search"
+                      placeholder={"search"}
+                      // value={searchTerm}
+                      // onChange={(e) => setSearchTerm(e.target.value)}
+                      className="font-semibold peer cursor-pointer relative z-10 h-12 w-12 rounded-full border bg-transparent pl-12
+                  focus:w-full focus:cursor-text focus:border-red-500 focus:pl-16 focus:pr-4 border-red-500 outline-none md:w-full md:cursor-text md:border-red-500 md:pl-16 md:pr-4 text-sm md:text-base"
+                    />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="absolute inset-y-0 my-auto h-8 w-12 border-r border-transparent stroke-red-500 px-3.5 peer-focus:border-red-500 peer-focus:stroke-red-500"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className=" mt-2 mb-10 px-3 lg:pl-5 ">
+              <div className="overflow-x-auto  text-gray-600">
+                <table className="table table-sm w-full  ">
+                  <thead className="bg-gray-700">
+                    <tr>
+                      <th className="text-white">SL</th>
+                      <th className="text-white">Id</th>
+                      <th className="text-white">Name</th>
+                      <th className="text-white">Email</th>
+                      <th className="text-white">Variant</th>
+                      <th className="text-white">Template</th>
+                      <th className="text-white">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {customer.members?.map((option, i) => (
+                      <tr key={i}>
+                        <th className=" ">{i + 1}</th>
+                        <td className=" font-semibold uppercase">
+                          {option?.card}
+                        </td>
+                        <td className=" ">{option?.description}</td>
+                        <td className=" ">{option?.price}</td>
+                        {/* <td className=" ">
+                          <FaEdit
+                            onClick={() => {
+                              document
+                                .getElementById("edit-cardVariant-modal")
+                                .showModal();
+                              setSingleCardVariant(option);
+                            }}
+                            size={20}
+                            className="hover:text-blue-600 cursor-pointer"
+                          />
+                        </td> */}
+                        {/* <td className=" ">
+                          <AiFillDelete
+                            onClick={() => {
+                              handleDelete(option._id);
+                            }}
+                            size={20}
+                            className="hover:text-red-700 cursor-pointer"
+                          />
+                        </td> */}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {loading && <Loading></Loading>}
+            </div>
+          </div>
         </div>
       )}
     </>
