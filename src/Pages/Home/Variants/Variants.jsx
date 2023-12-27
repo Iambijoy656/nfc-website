@@ -42,6 +42,14 @@ const Variants = () => {
       });
   }, [variant]);
 
+  useEffect(() => {
+    cardVariant.map((v) => {
+      if (v.card === "nfc") {
+        setVariantPrice(v.price);
+      }
+    });
+  }, [cardVariant]);
+
   // console.log(templates);
   // console.log(variant);
   return (
@@ -125,14 +133,18 @@ const Variants = () => {
                       <p className=" font-bold">
                         {Number(
                           template?.templatePrice ? template?.templatePrice : 0
-                        ) + (variantPrice ? Number(variantPrice) : 0)}
+                        ) + Number(variantPrice ? variantPrice : 0)}
                         Tk
                       </p>
                     </div>
 
                     <Link
                       className="p-3 px-8 mt-4 w-full text-center bg-[#363636] text-lg border border-[#363636]    text-gray-300 hover:text-gray-100 rounded-sm hover:bg-[#2e2e2e] hover:border hover:border-white transition duration-150"
-                      to={`/details/${template?._id}`}
+                      to={`/details?id=${template?._id}&price=${
+                        Number(
+                          template?.templatePrice ? template?.templatePrice : 0
+                        ) + (variantPrice ? Number(variantPrice) : 0)
+                      }`}
                     >
                       Buy
                     </Link>
