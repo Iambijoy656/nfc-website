@@ -1,13 +1,16 @@
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import Slider from "react-slick";
 import api from "../../utilities/api";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import Loading from "../../Shared/Loading/Loading";
+import { useDispatch } from 'react-redux'
+import { addToCart } from "../../redux/features/cart/cartSlice";
 
 const Details = () => {
+  const dispatch = useDispatch()
   const [loading, setLoading] = useState(false);
   const [template, setTemplate] = useState({});
   //   const [cart, setCart] = useContext(CartContext);
@@ -18,7 +21,12 @@ const Details = () => {
 
   const slider1 = useRef(null);
   const slider2 = useRef(null);
-  const { id } = useParams();
+
+  const location = useLocation();
+  const id = new URLSearchParams(location.search).get("id");
+  const price = new URLSearchParams(location.search).get("price");
+
+  console.log("price", price);
 
   useEffect(() => {
     setLoading(true);
@@ -34,7 +42,7 @@ const Details = () => {
       });
   }, [id]);
 
-  console.log("template", template);
+  // console.log("template", template);
 
   useEffect(() => {
     setNav1(slider1.current);
@@ -45,16 +53,28 @@ const Details = () => {
     setNav1(slider1.current);
     setNav2(slider2.current);
   }, []);
+
+  const handleAddToCart = (template) => {
+    dispatch(addToCart(template))
+  };
 
   return (
     <div className="py-24 grid grid-cols-1 lg:grid-cols-2 lg:gap-5 container ">
-      <div className="grid grid-cols-12  ">
+      <div className="grid grid-cols-12   ">
         <div className="col-span-10">
-          <Slider asNavFor={nav2} ref={slider1} className="mx-auto">
+          <Slider
+            asNavFor={nav2}
+            ref={slider1}
+            swipeToSlide={true}
+            focusOnSelect={true}
+            // vertical={true}
+            arrows={false}
+            className="mx-auto cursor-grab"
+          >
             {template?.templateImages?.map((image, i) => (
               <div key={i}>
                 <img
-                  className="mx-auto object-fit w-[500px] h-[300px] "
+                  className="mx-auto object-fit w-[500px] h-[350px] "
                   src={image?.imageUrl}
                   alt=""
                 />
@@ -85,22 +105,20 @@ const Details = () => {
       </div>
 
       <div className="">
-        <h2 className="text-2xl mt-2  tracking-wide capitalize ">
+        <h2 className="text-2xl font-semibold mt-2  tracking-wide capitalize ">
           {template?.templateName}
         </h2>
         <div className="text-xs text-gray-500 flex items-center gap-4 my-1 border-b pb-1">
           {/* <div className="w-10 ">
                 <Rating style={{ maxWidth: 80 }} value={0} readOnly />
               </div> */}
-          <p>{`(${0} review)`}</p>
+          <p>{`${0} review)`}</p>
         </div>
         <div className="flex items-center my-2">
-          <span className="text-2xl  text-red-500">
-            {"$"}
-            {0}
+          <span className="text-2xl  text-red-500 font-semibold">
+            {price} <span className="text-sm text-red-500">Tk</span>
           </span>
         </div>
-
         {/* <div className="text-sm tracking-wider">
              Sold By :{" "}
              <Link
@@ -110,10 +128,24 @@ const Details = () => {
                {product?.vendor?.vendorName}
              </Link>
            </div> */}
-        <div
+
+        {/* <div
           className="mt-2"
-          //   dangerouslySetInnerHTML={{ __html: specificationData }}
-        ></div>
+            dangerouslySetInnerHTML={{ __html: specificationData }}
+        ></div> */}
+
+        <div className="mt-2">
+          <ul className=" list-disc">
+            <li className="text-sm">
+              One side custom design. logo on the back.
+            </li>
+            <li className="text-sm">
+              Built-in high frequency NFC chip & QR Code embedded. It is made of
+              waterproof premium plastic (PVC).
+            </li>
+            <li className="text-sm">Product Dimension: 85.5 X 54 X 0.90 mm.</li>
+          </ul>
+        </div>
 
         <div className="flex flex-col md:flex-row justify-between  gap-3 lg:mt-8 items-center border-b border-t border-gray-300 p-2">
           <div className="flex border gap-5 w-max items-center justify-center px-3 h-12 ">
@@ -141,19 +173,16 @@ const Details = () => {
               <FaPlus className="text-gray-400 cursor-pointer font-bold" />
             </p>
           </div>
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-5 -mt-4">
             <button
-              //   onClick={() => handleAddToCart(product?._id)}
+              onClick={() => {
+                handleAddToCart(template);
+              }}
               className="  p-2 bg-[#232323] rounded outline outline-1 outline-white hover:bg-[#ef4444] text-white mt-4 cursor-pointer   ease-in duration-150"
             >
               Add To Cart
             </button>
-            <div
-              //   onClick={() => {
-              //     handleAddToCart(product?._id, true);
-              //   }}
-              className="  p-2 bg-[#232323] rounded outline outline-1 outline-white bg-[#ef4444] text-white mt-4  cursor-pointer  hover:bg-[#363636] ease-in duration-150"
-            >
+            <div className="  p-2  rounded outline outline-1 outline-white bg-[#ef4444] text-white mt-4  cursor-pointer  hover:bg-[#363636] ease-in duration-150">
               Buy Now
             </div>
           </div>

@@ -20,6 +20,12 @@ body {
     background-color: #272829;
     max-width: 1600px;
     margin: 0 auto;
+
+   
+}
+
+.drawer-side{
+    overflow-y:unset
 }
 
 h2 {
