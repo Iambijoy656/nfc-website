@@ -25,7 +25,8 @@ body {
 }
 
 .drawer-side{
-    overflow-y:unset
+    overflow-x:hidden
+    
 }
 
 h2 {
