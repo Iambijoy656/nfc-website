@@ -12,10 +12,11 @@ import Loading from "../../../Shared/Loading/Loading";
 
 const Variants = () => {
   const [templates, setTemplates] = useState([]);
-  const [variant, setVariant] = useState("nfc");
+  const [variant, setVariant] = useState("");
   const [cardVariant, setCardVariant] = useState([]);
   const [loading, setLoading] = useState(false);
   const [variantPrice, setVariantPrice] = useState(null);
+  const [variantId, setVariantId] = useState(null);
 
   useEffect(() => {
     api
@@ -42,13 +43,24 @@ const Variants = () => {
       });
   }, [variant]);
 
+  // useEffect(() => {
+  //   cardVariant.map((v) => {
+  //     if (v.card === "nfc") {
+  //       setVariantPrice(v.price);
+  //     }
+  //   });
+  // }, [cardVariant]);
+
+  
   useEffect(() => {
-    cardVariant.map((v) => {
-      if (v.card === "nfc") {
-        setVariantPrice(v.price);
-      }
-    });
+    if (cardVariant.length > 0) {
+      const firstVariant = cardVariant[0];
+      setVariantPrice(firstVariant.price);
+      setVariant(firstVariant.card); // Assuming you have a state variable called setVariantName to store the name
+      setVariantId(firstVariant._id); // Assuming you have a state variable called setVariantName to store the name
+    }
   }, [cardVariant]);
+  
 
   // console.log(templates);
   // console.log(variant);
@@ -66,6 +78,7 @@ const Variants = () => {
                 onClick={() => {
                   setVariant(variantName?.card);
                   setVariantPrice(variantName?.price);
+                  setVariantId(variantName?._id);
                 }}
                 key={i}
                 type="button"
@@ -137,7 +150,7 @@ const Variants = () => {
                         Tk
                       </p>
                     </div>
-
+                    {/* 
                     <Link
                       className="p-3 px-8 mt-4 w-full text-center bg-[#363636] text-lg border border-[#363636]    text-gray-300 hover:text-gray-100 rounded-sm hover:bg-[#2e2e2e] hover:border hover:border-white transition duration-150"
                       to={`/details?id=${template?._id}&price=${
@@ -145,6 +158,13 @@ const Variants = () => {
                           template?.templatePrice ? template?.templatePrice : 0
                         ) + (variantPrice ? Number(variantPrice) : 0)
                       }`}
+                    >
+                      Buy
+                    </Link> */}
+
+                    <Link
+                      className="p-3 px-8 mt-4 w-full text-center bg-[#363636] text-lg border border-[#363636]    text-gray-300 hover:text-gray-100 rounded-sm hover:bg-[#2e2e2e] hover:border hover:border-white transition duration-150"
+                      to={`/details?templateId=${template?._id}&variantId=${variantId}`}
                     >
                       Buy
                     </Link>

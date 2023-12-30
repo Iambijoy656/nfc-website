@@ -245,13 +245,18 @@ const Header = () => {
           ></label> */}
 
             <div>
-              <label htmlFor="my-drawer-4" className="indicator cursor-pointer z-0 ">
+              <label
+                htmlFor="my-drawer-4"
+                className="indicator cursor-pointer z-0 "
+              >
                 <FaCartShopping className="text-white text-xl" />
                 <span className="badge badge-sm indicator-item z-10  font-bold">
                   0
                 </span>
               </label>
-              <CartDrawer />
+              <div className="relative">
+                <CartDrawer />
+              </div>
             </div>
           </div>
         </div>
