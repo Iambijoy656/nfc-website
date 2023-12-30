@@ -5,11 +5,13 @@ import { useState } from "react";
 import LoginVariant from "./LoginVariant/LoginVariant";
 import RegisterVariant from "./RegisterVariant/RegisterVariant";
 import CartDrawer from "../CartDrawer/CartDrawer";
+import { useSelector } from "react-redux";
 
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [isShowLogin, setIsShowLogin] = useState(false);
   const [isShowRegister, setIsShowRegister] = useState(false);
+  const { templates } = useSelector((state) => state.cart);
 
   window.onscroll = () => {
     if (window.scrollY > 80) {
@@ -59,8 +61,8 @@ const Header = () => {
           to="/"
           className={({ isActive }) =>
             isActive
-              ? "font-medium text-[16px]    text-white underline underline-offset-2 transition-colors duration-200 bg-transparent"
-              : "font-medium text-[16px]    text-gray-300 transition-colors duration-200 bg-transparent"
+              ? "font-medium text-[16px]    text-white underline underline-offset-2 "
+              : "font-medium text-[16px]    text-gray-300 "
           }
           end
         >
@@ -72,8 +74,8 @@ const Header = () => {
           to="/about"
           className={({ isActive }) =>
             isActive
-              ? "font-medium text-[16px]    text-white underline underline-offset-2 transition-colors duration-200 bg-transparent"
-              : "font-medium text-[16px]    text-gray-300 transition-colors duration-200 bg-transparent"
+              ? "font-medium  text-[16px] text-white "
+              : "font-medium text-[16px] text-gray-300 "
           }
           end
         >
@@ -85,8 +87,8 @@ const Header = () => {
           to="/products"
           className={({ isActive }) =>
             isActive
-              ? "font-medium text-[16px]    text-white underline underline-offset-2 transition-colors duration-200 bg-transparent"
-              : "font-medium text-[16px]    text-gray-300 transition-colors duration-200 bg-transparent"
+              ? "font-medium text-[16px]    text-white underline underline-offset-2 "
+              : "font-medium text-[16px]    text-gray-300 "
           }
           end
         >
@@ -98,8 +100,8 @@ const Header = () => {
           to="/corporate"
           className={({ isActive }) =>
             isActive
-              ? "font-medium text-[16px]    text-white underline underline-offset-2 transition-colors duration-200 bg-transparent"
-              : "font-medium text-[16px]    text-gray-300 transition-colors duration-200 bg-transparent"
+              ? "font-medium text-[16px]    text-white underline underline-offset-2 "
+              : "font-medium text-[16px]    text-gray-300 "
           }
           end
         >
@@ -111,8 +113,8 @@ const Header = () => {
           to="/contact"
           className={({ isActive }) =>
             isActive
-              ? "font-medium text-[16px]    text-white underline underline-offset-2 transition-colors duration-200 bg-transparent"
-              : "font-medium text-[16px]    text-gray-300 transition-colors duration-200 bg-transparent"
+              ? "font-medium text-[16px]    text-white underline underline-offset-2 "
+              : "font-medium text-[16px]    text-gray-300 "
           }
           end
         >
@@ -120,7 +122,7 @@ const Header = () => {
         </NavLink>
       </li>
       <li className="block lg:hidden">
-        <Link className="font-medium text-[16px]   text-gray-100 transition-colors duration-200 bg-transparent">
+        <Link className="font-medium text-[16px]   text-gray-100 ">
           Login
         </Link>
 
@@ -251,7 +253,7 @@ const Header = () => {
               >
                 <FaCartShopping className="text-white text-xl" />
                 <span className="badge badge-sm indicator-item z-10  font-bold">
-                  0
+                  {templates?.length}
                 </span>
               </label>
               <div className="relative">

@@ -12,7 +12,7 @@ const CartDrawer = () => {
   const { templates, total } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
 
-  console.log(templates);
+  // console.log(templates);
 
   return (
     <>
@@ -49,17 +49,22 @@ const CartDrawer = () => {
                       </div>
                       <div className="px-2 w-full flex flex-col items-center gap-3">
                         <h1 className="word-wrap text-lg text-center capitalize ">
-                          {template?.templateName}
+                          {template?.templateName}{" "}
+                          <span className="text-xs uppercase">
+                            {" "}
+                            ({template?.variantName})
+                          </span>
                         </h1>
+
                         <p>Quantity: {template?.quantity}</p>
                         <p className=" text-md lg:text-lg">
-                          Total Price:{" "}
+                          Total Price:{" "} {console.log('qount----', total,template?.price,template?.quantity)}
                           {(
                             Number(template?.price) * Number(template?.quantity)
                           ).toFixed(2)}
                         </p>
                       </div>
-                      <div className="border-l p-3 flex flex-col items-center justify-around md:justify-between">
+                      <div className="border-l  p-3 flex flex-col items-center justify-around md:justify-between">
                         <button
                           className="bg-blue-700 hover:bg-blue-800  px-[5px] py-1 text-white rounded"
                           onClick={() => dispatch(addToCart(template))}
@@ -87,13 +92,15 @@ const CartDrawer = () => {
                 <div className="space-y-1  text-right mt-10">
                   <p>
                     Total amount:
-                    <span className="font-semibold mx-2 tracking-wide">{total}</span>
+                    <span className="font-semibold mx-2 tracking-wide">
+                      {total}
+                    </span>
                   </p>
                   <p className="text-sm dark:text-gray-400">
                     Not including taxes and shipping costs
                   </p>
                 </div>
-                <div className="flex justify-end space-x-4 my-2">
+                <div className="flex justify-end space-x-4 my-5">
                   <button
                     type="button"
                     className="px-6 py-2 border rounded-md dark:border-violet-400"

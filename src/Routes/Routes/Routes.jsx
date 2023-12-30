@@ -6,6 +6,7 @@ import CustomerLogin from "../../Pages/CustomerLogin/CustomerLogin";
 import CustomerProfile from "../../Pages/CustomerProfile/CustomerProfile";
 import EditCustomer from "../../Pages/EditCustomer/EditCustomer";
 import Details from "../../Pages/Details/Details";
+import AboutUs from "../../Pages/AboutUs/AboutUs";
 
 const router = createBrowserRouter([
   {
@@ -35,7 +36,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/details",
-        element: <Details/>,
+        element: <Details />,
+      },
+      {
+        path: "/about",
+        element: <AboutUs />,
       },
     ],
   },

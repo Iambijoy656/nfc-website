@@ -56,6 +56,11 @@ const Details = () => {
   // console.log("template", template);
   // console.log("variant", variant);
 
+
+
+
+
+
   const price =
     Number(template?.templatePrice ? template?.templatePrice : 0) +
     Number(variant ? variant?.price : 0);
@@ -71,8 +76,9 @@ const Details = () => {
   }, []);
 
   const handleAddToCart = (template) => {
-    dispatch(addToCart({ ...template, price: price }));
+    dispatch(addToCart({ ...template, price: price ,variantName:variant?.card}));
   };
+const thisTem=templates.find((tem) =>tem._id===templateId)
 
   return (
     <div>
@@ -142,7 +148,7 @@ const Details = () => {
                href="/shop"
                className="text-[#2ca4d1] font-semibold text-md capitalize tracking-wider"
              >
-               {product?.vendor?.vendorName}
+               {tem?.vendor?.vendorName}
              </Link>
            </div> */}
 
@@ -161,48 +167,50 @@ const Details = () => {
                 of waterproof premium plastic (PVC).
               </li>
               <li className="text-sm">
-                Product Dimension: 85.5 X 54 X 0.90 mm.
+                tem Dimension: 85.5 X 54 X 0.90 mm.
               </li>
             </ul>
           </div>
 
           <div className="flex flex-col md:flex-row justify-between  gap-3 lg:mt-8 items-center border-b border-t border-gray-300 p-2">
-            <div className="flex border gap-5 w-max items-center justify-center px-3 h-12 ">
+            <div className="flex border items-center justify-center px-3 h-12 ">
               <p
               //   onClick={() => {
-              //     decreaseCount(product?._id);
+              //     decreaseCount(tem?._id);
               //     setLocalQuantity(localQuantity - 1);
               //   }}
               >
                 <FaMinus
-                  onClick={() => dispatch(removeOne(template))}
+                  onClick={() =>
+                    dispatch(removeOne({ ...template, price: price }))
+                  }
                   className="text-gray-400 cursor-pointer font-bold"
                 />
               </p>
-              {templates.length > 0 ? (
-                templates.map((product, i) => (
+              {/* {templates.length > 0 ? (
+                templates.find((tem, i) =>tem._id===templateId ( */}
                   <input
-                    key={i}
-                    value={product?.quantity} // Add the value attribute here
+                    value={thisTem?.quantity??0} // Add the value attribute here
                     className="px-1 py-2  text-xs text-center bg-[#272829]"
                   />
-                ))
+                {/* ))
               ) : (
                 <input
                   value={0} // Add the value attribute here
                   className="px-1  py-2  text-xs text-center bg-[#272829]"
                 />
-              )}
+              )} */}
 
               <p
               //   onClick={() => {
-              //     increaseCount(product?._id);
+              //     increaseCount(tem?._id);
               //     setLocalQuantity(localQuantity + 1);
               //   }}
               >
                 <FaPlus
-                  onClick={() => dispatch(addToCart(...template,price))}
-                  
+                  onClick={() =>
+                    dispatch(addToCart({ ...template, price: price ,variantName:variant?.card}))
+                  }
                   className="text-gray-400 cursor-pointer font-bold"
                 />
               </p>

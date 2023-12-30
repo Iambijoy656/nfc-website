@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   templates: [],
-  total:0
+  total: 0,
 };
 
 const cartSlice = createSlice({
@@ -14,13 +14,17 @@ const cartSlice = createSlice({
         (template) => template._id === action.payload._id
       );
 
-      if (exiting) {
+      const existingVariant = state.templates.find(
+        (template) => template.variantName === action.payload.variantName
+      );
+
+      if (exiting && existingVariant) {
         exiting.quantity = exiting?.quantity + 1;
       } else {
         state.templates.push({ ...action?.payload, quantity: 1 });
       }
 
-      state.total += action.payload.price
+      state.total += action.payload.price;
     },
 
     removeOne: (state, action) => {
@@ -28,18 +32,31 @@ const cartSlice = createSlice({
         (template) => template._id === action.payload._id
       );
 
-      if (exiting && exiting.quantity > 1) {
+      const existingVariant = state.templates.find(
+        (template) => template.variantName === action.payload.variantName
+      );
+
+      if ((exiting && existingVariant) && (exiting?.quantity > 1)) {
         exiting.quantity = exiting?.quantity - 1;
       }
-      
-      state.total -= action.payload.price
+
+      state.total -= action.payload.price;
     },
 
+
+    
+    // removeFromCart: (state, action) => {
+    //   state.templates = state.templates.filter(
+    //     (template) => template._id !== action.payload._id
+    //   );
+    // },
+
     removeFromCart: (state, action) => {
-      state.templates = state.templates.filter(
-        (template) => template._id !== action.payload._id
-      );
-    },
+        state.templates = state.templates.filter(
+          (template) => template._id !== action.payload._id || template.variantName !== action.payload.variantName
+        );
+      }
+      
   },
 });
 
