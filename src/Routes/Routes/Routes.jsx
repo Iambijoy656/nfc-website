@@ -7,6 +7,8 @@ import CustomerProfile from "../../Pages/CustomerProfile/CustomerProfile";
 import EditCustomer from "../../Pages/EditCustomer/EditCustomer";
 import Details from "../../Pages/Details/Details";
 import AboutUs from "../../Pages/AboutUs/AboutUs";
+import CheckOut from "../../Pages/CheckOut/CheckOut";
+import PrivateRoute from "../../Auth/PrivateRoute";
 
 const router = createBrowserRouter([
   {
@@ -28,7 +30,12 @@ const router = createBrowserRouter([
 
       {
         path: "/customer-profile",
-        element: <CustomerProfile />,
+        element: (
+          <PrivateRoute>
+            {" "}
+            <CustomerProfile />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/dashboard/customers/edit/:id",
@@ -41,6 +48,14 @@ const router = createBrowserRouter([
       {
         path: "/about",
         element: <AboutUs />,
+      },
+      {
+        path: "/checkout",
+        element: (
+          <PrivateRoute>
+            <CheckOut />
+          </PrivateRoute>
+        ),
       },
     ],
   },
