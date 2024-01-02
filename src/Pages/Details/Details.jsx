@@ -1,18 +1,18 @@
 import { useEffect, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Slider from "react-slick";
 import api from "../../utilities/api";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { FaMinus, FaPlus } from "react-icons/fa";
-import Loading from "../../Shared/Loading/Loading";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart, removeOne } from "../../redux/features/cart/cartSlice";
+import { addToCart} from "../../redux/features/cart/cartSlice";
+import toast from "react-hot-toast";
 
 const Details = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { templates, total } = useSelector((state) => state.cart);
-  const [loading, setLoading] = useState(false);
+  const { templates } = useSelector((state) => state.cart);
   const [template, setTemplate] = useState({});
   const [variant, setVariant] = useState({});
   //   const [cart, setCart] = useContext(CartContext);
@@ -28,6 +28,9 @@ const Details = () => {
   const templateId = new URLSearchParams(location.search).get("templateId");
   const variantId = new URLSearchParams(location.search).get("variantId");
 
+  const token = localStorage.getItem("access-token");
+  const user = JSON.parse(localStorage.getItem("user"));
+
   useEffect(() => {
     api
       .get(`/cardVariant/${variantId}`)
@@ -40,26 +43,18 @@ const Details = () => {
   }, [variantId]);
 
   useEffect(() => {
-    setLoading(true);
     api
       .get(`/template/${templateId}`)
       .then((res) => {
         setTemplate(res.data.data);
-        setLoading(false);
       })
       .catch((err) => {
         console.log(err);
-        setLoading(false);
       });
   }, [templateId]);
 
-  // console.log("template", template);
   // console.log("variant", variant);
-
-
-
-
-
+  // console.log("tttttt", templates);
 
   const price =
     Number(template?.templatePrice ? template?.templatePrice : 0) +
@@ -75,10 +70,203 @@ const Details = () => {
     setNav2(slider2.current);
   }, []);
 
-  const handleAddToCart = (template) => {
-    dispatch(addToCart({ ...template, price: price ,variantName:variant?.card}));
+  // const handleAddToCart = async (_id) => {
+  //   if (customerId) {
+  //     let newCart = [];
+  //     const exists = cart?.find(
+  //       (existingProduct) => existingProduct?.product?._id === _id
+  //     );
+  //     if (!exists) {
+  //       const quantity = 1;
+  //       newCart = [...cart, { product: _id, quantity, isChecked: true }];
+  //       setCart(newCart);
+  //       // console.log("newCart", newCart);
+  //       try {
+  //         const response = await apiSecure.put(
+  //           /patch-customer/${customerId}/cart,
+  //           newCart
+  //         );
+  //         //   console.log("Response:", response);
+  //         if (response.status === 200) {
+  //           // console.log("wishlist page response---->", response);
+  //           dispatch(loadProduct());
+  //           toast.success("Item has been added to Cart!");
+  //         }
+  //       } catch (err) {
+  //         console.log(err);
+  //       }
+  //     } else {
+  //       toast.warning("This item is already in Cart!");
+  //       // const rest = cart.filter(
+  //       //   (existingProduct) => existingProduct._id !== _id
+  //       // );
+  //       // exists.quantity = exists.quantity + 1;
+  //       // newCart = [...rest, exists];
+  //     }
+  //     // addToDb(product._id);
+  //   } else {
+  //     dispatch(loginModal());
+  //     /* Swal.fire({
+  //       title: "You want to login?",
+  //       text: "You must have to login before add!",
+  //       icon: "warning",
+  //       showCancelButton: true,
+  //       confirmButtonColor: "#3085d6",
+  //       cancelButtonColor: "#d33",
+  //       confirmButtonText: "Yes, Login",
+  //       cancelButtonText: "No",
+  //     }).then((result) => {
+  //       if (result.isConfirmed) {
+  //         navigate.push("/login");
+  //       }
+  //     }); */
+  //   }
+  // };
+
+  // const handleAddToCart = async (template) => {
+  //   if (!user?.userEmail && !token) {
+  //     toast.error("Please Login First");
+  //     navigate("/customer-login");
+  //     return;
+  //   }
+
+  //    dispatch(
+  //     addToCart({ ...template, price: price, variantName: variant?.card })
+  //   );
+
+  //   const abc = ...templates
+  //   console.log('abc', abc);
+
+  //   try {
+  //     const response = await api.patch(
+  //       `/customers/${user?.customer}`,
+  //       {
+  //         cart:abc,
+  //       },
+  //       {
+  //         headers: {
+  //           authorization: `${token}`,
+  //         },
+  //       }
+  //     );
+  //     //   console.log("Response:", response);
+  //     if (response.status === 200) {
+  //       toast.success("Template Added Successfully  in Cart");
+  //     }
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+
+  //   // console.log('Added to cart--------------',templates)
+  // };
+
+  const handleAddToCart = async () => {
+    if (!user?.userEmail && !token) {
+      toast.error("Please Login First");
+      navigate("/customer-login");
+      return;
+    }
+    const cartData = {
+      templateId: templateId,
+      variantName: variant?.card,
+      price,
+    };
+
+    try {
+      // Assuming user?.customer is the customer ID
+      const response = await api.put(
+        `customers/addCart?id=${user?.customer}`,
+        cartData
+      );
+
+      if (response.status === 200) {
+        // console.log("resssss", response?.data?.data?.cart);
+        dispatch(addToCart(response?.data?.data?.cart));
+        toast.success("Template Added Successfully in Cart");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Error adding template to cart");
+    }
   };
-const thisTem=templates.find((tem) =>tem._id===templateId)
+
+  // const increaseCount = async (template) => {
+  //   if (!user?.userEmail && !token) {
+  //     toast.error("Please Login First");
+  //     navigate("/customer-login");
+  //     return;
+  //   }
+  //   // Assuming price and variant are defined somewhere in your code
+  //   const updatedTemplate = {
+  //     ...template,
+  //     price: price,
+  //     variantName: variant?.card,
+  //   };
+
+  //   const cartData = {
+  //     templateId: templateId,
+  //     variantName: variant?.card,
+  //     price: price,
+  //   };
+
+  //   try {
+  //     // Assuming user?.customer is the customer ID
+  //     const response = await api.put(
+  //       `customers/addCart?id=${user?.customer}`,
+  //       cartData
+  //     );
+
+  //     if (response.status === 200) {
+  //       // dispatch(addToCart(response?.data?.data?.cart));
+  //     }
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
+
+  const decreaseCount = async () => {
+    if (!user?.userEmail && !token) {
+      toast.error("Please Login First");
+      navigate("/customer-login");
+      return;
+    }
+    // Assuming price and variant are defined somewhere in your code
+    // const updatedTemplate = {
+    //   ...template,
+    //   price: price,
+    //   variantName: variant?.card,
+    // };
+
+    const cartData = {
+      templateId: templateId,
+      variantName: variant?.card,
+      price: price,
+    };
+
+    try {
+      // Assuming user?.customer is the customer ID
+      const response = await api.put(
+        `customers/removeOneFromCart?id=${user?.customer}`,
+        cartData
+      );
+
+      if (response.status === 200) {
+        // dispatch(removeOne({ ...template, price: price }));
+        dispatch(addToCart(response?.data?.data?.cart));
+        toast.success("Template Remove Successfully in Cart");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const thisTem = templates.find(
+    (template) =>
+      template?.templateId?._id === templateId &&
+      template.variantName === variant.card
+  );
+
+  // console.log("thisTem", thisTem);
 
   return (
     <div>
@@ -166,9 +354,7 @@ const thisTem=templates.find((tem) =>tem._id===templateId)
                 Built-in high frequency NFC chip & QR Code embedded. It is made
                 of waterproof premium plastic (PVC).
               </li>
-              <li className="text-sm">
-                tem Dimension: 85.5 X 54 X 0.90 mm.
-              </li>
+              <li className="text-sm">tem Dimension: 85.5 X 54 X 0.90 mm.</li>
             </ul>
           </div>
 
@@ -181,25 +367,21 @@ const thisTem=templates.find((tem) =>tem._id===templateId)
               //   }}
               >
                 <FaMinus
-                  onClick={() =>
-                    dispatch(removeOne({ ...template, price: price }))
+                  onClick={
+                    () => decreaseCount(template)
+                    // () => dispatch(removeOne({ ...template, price: price }))
+                    // dispatch(removeOne({ ...template, price: price ,variantName:variant?.card}))
                   }
                   className="text-gray-400 cursor-pointer font-bold"
                 />
               </p>
               {/* {templates.length > 0 ? (
                 templates.find((tem, i) =>tem._id===templateId ( */}
-                  <input
-                    value={thisTem?.quantity??0} // Add the value attribute here
-                    className="px-1 py-2  text-xs text-center bg-[#272829]"
-                  />
-                {/* ))
-              ) : (
-                <input
-                  value={0} // Add the value attribute here
-                  className="px-1  py-2  text-xs text-center bg-[#272829]"
-                />
-              )} */}
+              <input
+                value={thisTem?.quantity ?? 0} // Add the value attribute here
+                className="px-1 py-2  text-xs text-center bg-[#272829]"
+              />
+        
 
               <p
               //   onClick={() => {
@@ -208,8 +390,15 @@ const thisTem=templates.find((tem) =>tem._id===templateId)
               //   }}
               >
                 <FaPlus
-                  onClick={() =>
-                    dispatch(addToCart({ ...template, price: price ,variantName:variant?.card}))
+                  onClick={
+                    () => handleAddToCart(template)
+                    // dispatch(
+                    //   addToCart({
+                    //     ...template,
+                    //     price: price,
+                    //     variantName: variant?.card,
+                    //   })
+                    // )
                   }
                   className="text-gray-400 cursor-pointer font-bold"
                 />

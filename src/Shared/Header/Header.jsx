@@ -1,5 +1,5 @@
 // import { useEffect, } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { FaCartShopping } from "react-icons/fa6";
 import { useState } from "react";
 import LoginVariant from "./LoginVariant/LoginVariant";
@@ -21,11 +21,15 @@ const Header = () => {
     }
   };
 
-  // const handleLogout = () => {
-  //   localStorage.removeItem("access-token");
-  //   localStorage.removeItem("user");
-  //   navigate("/");
-  // };
+  // const token = localStorage.getItem("access-token");
+  const user = JSON.parse(localStorage.getItem("user"));
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("access-token");
+    localStorage.removeItem("user");
+    navigate("/");
+  };
 
   // useEffect(() => {
   //   if (token) {
@@ -122,9 +126,7 @@ const Header = () => {
         </NavLink>
       </li>
       <li className="block lg:hidden">
-        <Link className="font-medium text-[16px]   text-gray-100 ">
-          Login
-        </Link>
+        <Link className="font-medium text-[16px]   text-gray-100 ">Login</Link>
 
         <div>
           <Link className="font-medium text-[15px]   text-gray-100  bg-transparent outline outline-1 outline-red-500 p-2 rounded hover:bg-red-500  transition duration-150">
@@ -177,7 +179,7 @@ const Header = () => {
             </div>
             <Link
               to={"/"}
-              className="text-xl md:text-2xl lg:text-4xl font-bold "
+              className="text-xl md:text-2xl xl:text-4xl font-bold "
             >
               Digital Card
             </Link>
@@ -186,80 +188,98 @@ const Header = () => {
             <ul className="menu menu-horizontal px-1">{menuItems}</ul>
           </div>
           <div className="navbar-end mx-5 flex items-center gap-2 md:gap-5 ">
-            <div className="hidden lg:block ">
-              <div className="flex items-center gap-2">
-                <div
-                  onMouseEnter={() => setIsShowLogin(true)}
-                  onMouseLeave={() => setIsShowLogin(false)}
-                  className="  tracking-wide font-semibold p-4  relative "
-                >
-                  <NavLink
-                    to="/"
-                    className={({ isActive }) =>
-                      isActive || location.pathname == "/"
-                        ? "nav-link text-gray-100  "
-                        : "nav-link "
-                    }
+            {!user?.userEmail ? (
+              <div className="hidden lg:block ">
+                <div className="flex items-center gap-2">
+                  <div
+                    onMouseEnter={() => setIsShowLogin(true)}
+                    onMouseLeave={() => setIsShowLogin(false)}
+                    className="  tracking-wide font-semibold p-4  relative "
                   >
-                    Login
-                  </NavLink>
+                    <NavLink
+                      to="#"
+                      className={({ isActive }) =>
+                        isActive || location.pathname == "/"
+                          ? "nav-link text-gray-100  "
+                          : "nav-link "
+                      }
+                    >
+                      Login
+                    </NavLink>
 
-                  {isShowLogin && (
-                    <div className="absolute z-50 top-[50px] left-0 right-0">
-                      <LoginVariant />
-                    </div>
-                  )}
-                </div>
-                {/* <div>
+                    {isShowLogin && (
+                      <div className="absolute z-50 top-[50px] left-0 right-0">
+                        <LoginVariant />
+                      </div>
+                    )}
+                  </div>
+                  {/* <div>
                 <Link className="font-medium text-[15px] mx-2 px-5 text-gray-100  bg-transparent outline outline-1 outline-red-500 p-2 rounded-full hover:bg-red-500  transition duration-150">
                   Register
                 </Link>
               </div> */}
 
-                <div
-                  onMouseEnter={() => setIsShowRegister(true)}
-                  onMouseLeave={() => setIsShowRegister(false)}
-                  className="  font-medium text-[15px] mx-2 px-5 text-gray-100  bg-transparent outline outline-1 outline-red-500 rounded-full hover:bg-red-500  transition duration-150 p-3  relative "
-                >
-                  <NavLink
-                    to="/"
-                    className={({ isActive }) =>
-                      isActive || location.pathname == "/"
-                        ? "nav-link text-gray-100  "
-                        : "nav-link "
-                    }
+                  <div
+                    onMouseEnter={() => setIsShowRegister(true)}
+                    onMouseLeave={() => setIsShowRegister(false)}
+                    className="  font-medium text-[15px] mx-2 px-5 text-gray-100  bg-transparent outline outline-1 outline-red-500 rounded-full hover:bg-red-500  transition duration-150 p-3  relative "
                   >
-                    Registration
-                  </NavLink>
+                    <NavLink
+                      to="/"
+                      className={({ isActive }) =>
+                        isActive || location.pathname == "/"
+                          ? "nav-link text-gray-100  "
+                          : "nav-link "
+                      }
+                    >
+                      Registration
+                    </NavLink>
 
-                  {isShowRegister && (
-                    <div className="absolute z-50 top-[45px] left-0 right-0">
-                      <RegisterVariant />
-                    </div>
-                  )}
+                    {isShowRegister && (
+                      <div className="absolute z-50 top-[45px] left-0 right-0">
+                        <RegisterVariant />
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              <>
+                <div className="mt-2">
+                  <label
+                    htmlFor="my-drawer-4"
+                    className="indicator cursor-pointer z-0 "
+                  >
+                    <FaCartShopping className="text-white text-xl" />
+                    <span className="badge badge-sm indicator-item z-10  font-bold">
+                      {templates?.length}
+                    </span>
+                  </label>
+                  <div className="relative">
+                    <CartDrawer />
+                  </div>
+                </div>
+
+                {/* <Link
+                  to={"/customer-profile"}
+                  className="font-medium text-[16px]    text-white "
+                >
+                  Profile
+                </Link> */}
+
+                <button
+                  onClick={handleLogout}
+                  className=" font-medium text-[15px] ml-3 px-5 text-gray-100  bg-transparent outline outline-1 outline-red-500 rounded hover:bg-red-500  transition duration-150 p-3  "
+                >
+                  Logout
+                </button>
+              </>
+            )}
             {/* <label
           
             aria-label="close sidebar"
             className="drawer-overlay"
           ></label> */}
-
-            <div>
-              <label
-                htmlFor="my-drawer-4"
-                className="indicator cursor-pointer z-0 "
-              >
-                <FaCartShopping className="text-white text-xl" />
-                <span className="badge badge-sm indicator-item z-10  font-bold">
-                  {templates?.length}
-                </span>
-              </label>
-              <div className="relative">
-                <CartDrawer />
-              </div>
-            </div>
           </div>
         </div>
       </div>
