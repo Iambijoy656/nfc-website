@@ -5,6 +5,7 @@ import api from "../../utilities/api";
 import Loading from "../../Shared/Loading/Loading";
 import { HiDevicePhoneMobile } from "react-icons/hi2";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 
 const CheckOut = () => {
   const [subscriptions, setSubscriptions] = useState([]);
@@ -116,14 +117,23 @@ const CheckOut = () => {
     reset();
   };
 
-  const handleOnlinePayment = (data) => {
+  const handleOnlinePayment = async (data) => {
     (data.totalOrder = totalOrder), (data.products = templates);
     data.customer = user?.customer;
     data.totalPrice = total;
-
-    console.log(data);
-
-    reset2();
+    data.transactionId= "uniqueT$#@";
+    try {
+      const res = await api.post(`customerOrders/create-customer-order`, data);
+      console.log(res);
+      if (res.status === 200) {
+        // setPayment(true);
+        toast.success("Order successfully Done");
+        reset2();
+      }
+    } catch (err) {
+      toast.error("please try again");
+      console.log("Error: ", err);
+    }
   };
 
   return (

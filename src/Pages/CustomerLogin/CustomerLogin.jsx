@@ -5,9 +5,6 @@ import { ImEye } from "react-icons/im";
 import api from "../../utilities/api";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-
-// import { useDispatch } from "react-redux";
-// import { userData } from "../../redux/Feathers/userData/userDataSlice";
 import Swal from "sweetalert2";
 
 const CustomerLogin = () => {
@@ -36,14 +33,14 @@ const CustomerLogin = () => {
       .post("/auth/login", CustomerLogin)
       .then((res) => {
         // console.log(res.data);
-        const token = res.data.data.others.accessToken;
+        const token = res?.data?.data?.others?.accessToken;
         // console.log('token', token);
         // console.log(res.data.data.verifiedUser);
 
         // console.log("customer login", res?.data?.data?.verifiedUser?.role);
 
         if (
-          res.data.statusCode === 200 &&
+          res?.data?.statusCode === 200 &&
           res?.data?.data?.verifiedUser?.role === "customer"
         ) {
           //   dispatch(userData(res.data.data.verifiedUser));
@@ -53,7 +50,7 @@ const CustomerLogin = () => {
             "user",
             JSON.stringify(res.data.data.verifiedUser)
           );
-          toast.success(res.data.message.slice(4));
+          toast.success(res?.data?.message?.slice(4));
           navigate("/customer-profile");
         } else {
           toast.error("You are not a Customer");
@@ -61,7 +58,7 @@ const CustomerLogin = () => {
       })
       .catch((err) => {
         console.log(err);
-        toast.error(err.response.data.message);
+        toast.error(err?.response?.data?.message);
       });
   };
 
