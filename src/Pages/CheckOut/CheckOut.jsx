@@ -11,6 +11,7 @@ const CheckOut = () => {
   const [loading, setLoading] = useState(true);
   const { templates } = useSelector((state) => state.cart);
   const [method, setMethod] = useState("");
+  const [payment, setPayment] = useState("manual");
   const token = localStorage.getItem("access-token");
   const user = JSON.parse(localStorage.getItem("user"));
   const [paymentOptions, setPaymentOptions] = useState([]);
@@ -73,7 +74,7 @@ const CheckOut = () => {
 
   const filteredSubscription = subscriptions?.find(
     (subscription) => parseInt(subscription.duration.split(" ")[0]) === 12
-  ) ?? { packagePrice: 0 }; // Provide a default subscription with packagePrice as 0 if not found
+  );
 
   const total = templates.reduce((acc, template) => {
     const templatePrice = Number(template.price);
@@ -88,23 +89,45 @@ const CheckOut = () => {
     return acc;
   }, 0);
 
+  const totalOrder = templates.reduce((acc, template) => {
+    const templateQuantity = Number(template.quantity);
+    // Include the subscription's price in the total calculation
+    acc += templateQuantity;
+
+    return acc;
+  }, 0);
+
   const {
     register,
+    reset,
     formState: { errors },
     handleSubmit,
   } = useForm();
+
+  const {
+    register: register2,
+    reset: reset2,
+    formState: { errors: errors2 },
+    handleSubmit: handleSubmit2,
+  } = useForm();
+
   const handleManualPayment = (data) => {
     console.log(data);
+    reset();
   };
 
-  const pppp = paymentOptions.find(
-    (number) => number.paymentMethod == method
-  )?.paymentNumber;
+  const handleOnlinePayment = (data) => {
+    (data.totalOrder = totalOrder), (data.products = templates);
+    data.customer = user?.customer;
+    data.totalPrice = total;
 
-  console.log("pppp", pppp);
+    console.log(data);
+
+    reset2();
+  };
 
   return (
-    <div classNameName="py-44">
+    <div className="py-10">
       {loading ? (
         <Loading />
       ) : (
@@ -147,18 +170,16 @@ const CheckOut = () => {
                     <span className="float-right text-sm tracking-wider ">
                       Quantity : {template?.quantity}
                     </span>
-
                     <p className="text-xs ">
                       Subscription Fee: {filteredSubscription?.packagePrice}
                       <span> Tk (12 month)</span>
                     </p>
-
                     <p className=" text-lg font-bold mt-2">
                       {/* Total: {template?.price}  */}
                       Total:{" "}
                       {(
                         Number(template?.price) * Number(template?.quantity) +
-                        Number(filteredSubscription.packagePrice) *
+                        Number(filteredSubscription?.packagePrice) *
                           Number(template?.quantity)
                       ).toFixed(2)}
                     </p>
@@ -235,334 +256,486 @@ const CheckOut = () => {
             </htmlForm>
           </div>
           <div className="mt-10  px-4 pt-8 lg:mt-0">
-            <p className="text-2xl font-medium">Payment Details</p>
+            <p className="text-2xl font-medium">Payment</p>
             <p className="">
               Complete your order by providing your payment details.
             </p>
-            <form onSubmit={handleSubmit(handleManualPayment)} className="">
-              <div>
-                <label
-                  htmlFor="email"
-                  className="mt-4 mb-2 block text-sm font-medium"
-                >
-                  Email
-                </label>
-                <div className="relative">
-                  <input
-                    {...register("email", {
-                      required: "Email is required ",
-                    })}
-                    type="email"
-                    // value={user?.userEmail}
-                    className="w-full   bg-black rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-red-500 focus:ring-red-500"
-                    placeholder="your.email@gmail.com"
-                  />
 
-                  <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4 "
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      stroke-width="2"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
-                      />
-                    </svg>
-                  </div>
-                </div>
-                {errors.email && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.email?.message}
-                  </p>
-                )}
-              </div>
+            <div className=" flex items-center gap-3 mt-8">
+              <button
+                onClick={() => {
+                  setPayment("manual");
+                }}
+                type="button"
+                className={`${
+                  payment === "manual" && "bg-[#ef4444]"
+                } px-5 py-2 font-semibold border rounded border-[#ef4444]  text-gray-100 capitalize tracking-wider hover:bg-[#ef4444] transition duration-150 ease-out hover:ease-in`}
+              >
+                Manually
+              </button>
 
-              <div>
-                <label className="mt-4 mb-2 block text-sm font-medium">
-                  Name
-                </label>
-                <div className="relative">
-                  <input
-                    {...register("name", {
-                      required: "Name is required ",
-                    })}
-                    type="text"
-                    className="w-full bg-black valid:bg-black rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm uppercase shadow-sm outline-none focus:z-10 focus:border-red-500 focus:ring-red-500"
-                    placeholder="Your full name here"
-                  />
-                  <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4 "
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      stroke-width="2"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z"
-                      />
-                    </svg>
-                  </div>
-                </div>
-
-                {errors.name && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.name?.message}
-                  </p>
-                )}
-              </div>
-
-              <div className="my-4">
-                <label className="mb-2 block text-sm font-medium">
-                  Select Payment Method
-                </label>
-                <select
-                  {...register("paymentMethod", {
-                    required: "Payment Method is required ",
-                  })}
-                  onChange={(e) => setMethod(e.target.value)}
-                  type="text"
-                  className="w-full rounded-md border border-gray-200 bg-black text-gray-300 uppercase px-4 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-red-500 focus:ring-red-500"
-                >
-                  <option value={""}>Select Payment Method?</option>
-                  {paymentOptions.map((option, i) => (
-                    <option key={i} value={option?.paymentMethod}>
-                      {option?.paymentMethod}
-                    </option>
-                  ))}
-                </select>
-                {errors.paymentMethod && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.paymentMethod?.message}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <label className="mt-4 mb-2 block text-sm font-medium">
-                  Payment Number
-                </label>
-                <div className="relative">
-                  {console.log(
-                    method &&
-                      paymentOptions.find(
-                        (number) => number?.paymentMethod === method
-                      )?.paymentNumber
-                  )}
-                  <input
-                    defaultValue={
-                      method &&
-                      paymentOptions.find(
-                        (number) => number?.paymentMethod === method
-                      )?.paymentNumber
-                    }
-                    className="w-full bg-black rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm uppercase shadow-sm outline-none focus:z-10 focus:border-red-500 focus:ring-red-500"
-                    placeholder="Select Method First"
-                  />
-                  <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
-                    <HiDevicePhoneMobile />
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <label className="mt-4 mb-2 block text-sm font-medium">
-                  Transaction ID
-                </label>
-                <div className="relative">
-                  <input
-                    {...register("transactionNumber", {
-                      required: "Transaction Number is required",
-                    })}
-                    type="text"
-                    className="w-full bg-black rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm uppercase shadow-sm outline-none focus:z-10 focus:border-red-500 focus:ring-red-500"
-                    placeholder="TrxID"
-                  />
-                  <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4 "
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      stroke-width="2"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z"
-                      />
-                    </svg>
-                  </div>
-                </div>
-                {errors.transactionNumber && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.transactionNumber?.message}
-                  </p>
-                )}
-              </div>
-
-              {/* <div>
-                <label
-                  htmlFor="card-holder"
-                  className="mt-4 mb-2 block text-sm font-medium"
-                >
-                  Select Payment Method
-                </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    id="card-holder"
-                    name="card-holder"
-                    className="w-full bg-black rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm uppercase shadow-sm outline-none focus:z-10 focus:border-red-500 focus:ring-red-500"
-                    placeholder="Select Payment Method"
-                  />
-                  <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-4 w-4 "
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      stroke-width="2"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </div> */}
-
-              {/* <label
-            htmlFor="card-no"
-            className="mt-4 mb-2 block text-sm font-medium"
-          >
-            Card Details
-          </label>
-           <div className="flex">
-            <div className="relative w-7/12 flex-shrink-0">
-              <input
-                type="text"
-                id="card-no"
-                name="card-no"
-                className="w-full bg-black rounded-md border border-gray-200 px-2 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-red-500 focus:ring-red-500"
-                placeholder="xxxx-xxxx-xxxx-xxxx"
-              />
-              <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
-                <svg
-                  className="h-4 w-4 "
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M11 5.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1z" />
-                  <path d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2zm13 2v5H1V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1zm-1 9H2a1 1 0 0 1-1-1v-1h14v1a1 1 0 0 1-1 1z" />
-                </svg>
-              </div>
+              <button
+                onClick={() => {
+                  setPayment("online");
+                }}
+                type="button"
+                className={`${
+                  payment === "online" && "bg-[#ef4444]"
+                } px-5 py-2 font-semibold border rounded border-[#ef4444]  text-gray-100 capitalize tracking-wider hover:bg-[#ef4444] transition duration-150 ease-out hover:ease-in`}
+              >
+                Online
+              </button>
             </div>
-            <input
-              type="text"
-              name="credit-expiry"
-              className="w-full bg-black rounded-md border border-gray-200 px-2 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-red-500 focus:ring-red-500"
-              placeholder="MM/YY"
-            />
-            <input
-              type="text"
-              name="credit-cvc"
-              className="w-1/6 bg-black flex-shrink-0 rounded-md border border-gray-200 px-2 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-red-500 focus:ring-red-500"
-              placeholder="CVC"
-            />
-         
-         
-         
-          </div> */}
 
-              <div>
-                <label className="mt-4 mb-2 block text-sm font-medium">
-                  Billing Address
-                </label>
-                <div className="flex flex-col sm:flex-row">
-                  <div className="relative flex-shrink-0 sm:w-7/12">
+            {payment == "manual" ? (
+              <form onSubmit={handleSubmit(handleManualPayment)} className="">
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="mt-4 mb-2 block text-sm font-medium"
+                  >
+                    Email
+                  </label>
+                  <div className="relative">
                     <input
-                      {...register("billingAddress", {
-                        required: "Billing Address is required",
+                      {...register("email", {
+                        required: "Email is required ",
+                      })}
+                      type="email"
+                      value={user?.userEmail}
+                      className="w-full   bg-black rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-red-500 focus:ring-red-500"
+                      placeholder="your.email@gmail.com"
+                    />
+
+                    <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4 "
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  {errors.email && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.email?.message}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="mt-4 mb-2 block text-sm font-medium">
+                    Name
+                  </label>
+                  <div className="relative">
+                    <input
+                      {...register("name", {
+                        required: "Name is required ",
+                      })}
+                      type="text"
+                      className="w-full bg-black valid:bg-black rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm uppercase shadow-sm outline-none focus:z-10 focus:border-red-500 focus:ring-red-500"
+                      placeholder="Your full name here"
+                    />
+                    <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4 "
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+
+                  {errors.name && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.name?.message}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="mt-4 mb-2 block text-sm font-medium">
+                    Contact Number
+                  </label>
+                  <div className="relative">
+                    <input
+                      {...register("number", {
+                        required: " Contact Number is required ",
+                      })}
+                      type="text"
+                      className="w-full bg-black valid:bg-black rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm uppercase shadow-sm outline-none focus:z-10 focus:border-red-500 focus:ring-red-500"
+                      placeholder="Your Contact Number here"
+                    />
+                    <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
+                      <HiDevicePhoneMobile />
+                    </div>
+                  </div>
+
+                  {errors.number && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.number?.message}
+                    </p>
+                  )}
+                </div>
+
+                <div className="my-4">
+                  <label className="mb-2 block text-sm font-medium">
+                    Select Payment Method
+                  </label>
+                  <select
+                    {...register("paymentMethod", {
+                      required: "Payment Method is required ",
+                    })}
+                    onChange={(e) => setMethod(e.target.value)}
+                    type="text"
+                    className="w-full rounded-md border border-gray-200 bg-black text-gray-300 uppercase px-4 py-3 text-sm shadow-sm outline-none focus:z-10 focus:border-red-500 focus:ring-red-500"
+                  >
+                    <option value={""}>Select Payment Method?</option>
+                    {paymentOptions.map((option, i) => (
+                      <option key={i} value={option?.paymentMethod}>
+                        {option?.paymentMethod}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.paymentMethod && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.paymentMethod?.message}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="mt-4 mb-2 block text-sm font-medium">
+                    Payment Number
+                  </label>
+                  <div className="relative">
+                    {console.log(
+                      method &&
+                        paymentOptions.find(
+                          (number) => number?.paymentMethod === method
+                        )?.paymentNumber
+                    )}
+                    <input
+                      defaultValue={
+                        method &&
+                        paymentOptions.find(
+                          (number) => number?.paymentMethod === method
+                        )?.paymentNumber
+                      }
+                      className="w-full bg-black rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm uppercase shadow-sm outline-none focus:z-10 focus:border-red-500 focus:ring-red-500"
+                      placeholder="Select Method First"
+                    />
+                    <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
+                      <HiDevicePhoneMobile />
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="mt-4 mb-2 block text-sm font-medium">
+                    Transaction ID
+                  </label>
+                  <div className="relative">
+                    <input
+                      {...register("transactionNumber", {
+                        required: "Transaction Number is required",
+                      })}
+                      type="text"
+                      className="w-full bg-black rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm uppercase shadow-sm outline-none focus:z-10 focus:border-red-500 focus:ring-red-500"
+                      placeholder="TrxID"
+                    />
+                    <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4 "
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  {errors.transactionNumber && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.transactionNumber?.message}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <label className="mt-4 mb-2 block text-sm font-medium">
+                    Address
+                  </label>
+                  <div className="flex flex-col sm:flex-row">
+                    <div className="relative flex-shrink-0 sm:w-7/12">
+                      <input
+                        {...register("address", {
+                          required: "Address is required",
+                        })}
+                        type="text"
+                        className="w-full bg-black rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-red-500 focus:ring-red-500"
+                        placeholder="Street Address"
+                      />
+                      <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
+                        <img
+                          className="h-5 w-5 object-contain"
+                          src="https://media.istockphoto.com/id/1132350508/photo/bangladesh-flag-on-canvas.jpg?s=612x612&w=0&k=20&c=QdNQjaEiY3sQy6x2PTI1YigXa-Fz_lBEC9wXZjsK-1o="
+                          alt=""
+                        />
+                      </div>
+                    </div>
+                    <input
+                      {...register("state", {
+                        required: "state is required",
                       })}
                       type="text"
                       className="w-full bg-black rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-red-500 focus:ring-red-500"
-                      placeholder="Street Address"
+                      placeholder="State"
                     />
+                    <input
+                      {...register("postalCode", {
+                        required: "postalCode is required",
+                      })}
+                      type="text"
+                      className="flex-shrink-0 bg-black rounded-md border border-gray-200 px-4 py-3 text-sm shadow-sm outline-none sm:w-1/6 focus:z-10 focus:border-red-500 focus:ring-red-500"
+                      placeholder="postalCode"
+                    />
+                  </div>
+                  {errors.address && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.address?.message}
+                    </p>
+                  )}{" "}
+                  {errors.state && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.state?.message}
+                    </p>
+                  )}{" "}
+                  {errors.postalCode && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.postalCode?.message}
+                    </p>
+                  )}
+                </div>
+                <div className="mt-6 border-t border-b py-2">
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm font-medium ">Subtotal</p>
+                    <p className="font-semibold ">{total}</p>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm font-medium ">Shipping</p>
+                    <p className="font-semibold ">0.00</p>
+                  </div>
+                </div>
+                <div className="mt-6 flex items-center justify-between">
+                  <p className="text-sm font-medium ">Total</p>
+                  <p className="text-2xl font-semibold ">{total}</p>
+                </div>
+                <button className="mt-4 mb-8 w-full rounded-md bg-red-500 px-6 py-3 font-medium text-white hover:bg-red-600 transition duration-150 ease-in">
+                  Place Order
+                </button>
+              </form>
+            ) : (
+              <form onSubmit={handleSubmit2(handleOnlinePayment)} className="">
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="mt-4 mb-2 block text-sm font-medium"
+                  >
+                    Email
+                  </label>
+                  <div className="relative">
+                    <input
+                      {...register2("email", {
+                        required: "Email is required ",
+                      })}
+                      type="email"
+                      value={user?.userEmail}
+                      className="w-full   bg-black rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-red-500 focus:ring-red-500"
+                      placeholder="your.email@gmail.com"
+                    />
+
                     <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
-                      <img
-                        className="h-5 w-5 object-contain"
-                        src="https://media.istockphoto.com/id/1132350508/photo/bangladesh-flag-on-canvas.jpg?s=612x612&w=0&k=20&c=QdNQjaEiY3sQy6x2PTI1YigXa-Fz_lBEC9wXZjsK-1o="
-                        alt=""
-                      />
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4 "
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
+                        />
+                      </svg>
                     </div>
                   </div>
-                  <input
-                    {...register("state", {
-                      required: "state is required",
-                    })}
-                    type="text"
-                    className="w-full bg-black rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-red-500 focus:ring-red-500"
-                    placeholder="State"
-                  />
-                  <input
-                    {...register("zip", {
-                      required: "zip is required",
-                    })}
-                    type="text"
-                    className="flex-shrink-0 bg-black rounded-md border border-gray-200 px-4 py-3 text-sm shadow-sm outline-none sm:w-1/6 focus:z-10 focus:border-red-500 focus:ring-red-500"
-                    placeholder="ZIP"
-                  />
+                  {errors2.email && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors2.email?.message}
+                    </p>
+                  )}
                 </div>
-                {errors.billingAddress && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.billingAddress?.message}
-                  </p>
-                )}{" "}
-                {errors.state && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.state?.message}
-                  </p>
-                )}{" "}
-                {errors.zip && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.zip?.message}
-                  </p>
-                )}
-              </div>
-              <div className="mt-6 border-t border-b py-2">
-                <div className="flex items-center justify-between">
-                  <p className="text-sm font-medium ">Subtotal</p>
-                  <p className="font-semibold ">{total}</p>
+                <div>
+                  <label className="mt-4 mb-2 block text-sm font-medium">
+                    Name
+                  </label>
+                  <div className="relative">
+                    <input
+                      {...register2("name", {
+                        required: "Name is required ",
+                      })}
+                      type="text"
+                      className="w-full bg-black valid:bg-black rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm uppercase shadow-sm outline-none focus:z-10 focus:border-red-500 focus:ring-red-500"
+                      placeholder="Your full name here"
+                    />
+                    <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4 "
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+
+                  {errors2.name && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.name?.message}
+                    </p>
+                  )}
                 </div>
-                <div className="flex items-center justify-between">
-                  <p className="text-sm font-medium ">Shipping</p>
-                  <p className="font-semibold ">0.00</p>
+
+                <div>
+                  <label className="mt-4 mb-2 block text-sm font-medium">
+                    Contact Number
+                  </label>
+                  <div className="relative">
+                    <input
+                      {...register2("number", {
+                        required: "Contact Number is required ",
+                      })}
+                      type="text"
+                      className="w-full bg-black valid:bg-black rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm uppercase shadow-sm outline-none focus:z-10 focus:border-red-500 focus:ring-red-500"
+                      placeholder="Your Contact Number here"
+                    />
+                    <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
+                      <HiDevicePhoneMobile />
+                    </div>
+                  </div>
+
+                  {errors.number && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.number?.message}
+                    </p>
+                  )}
                 </div>
-              </div>
-              <div className="mt-6 flex items-center justify-between">
-                <p className="text-sm font-medium ">Total</p>
-                <p className="text-2xl font-semibold ">{total}</p>
-              </div>
-              <button className="mt-4 mb-8 w-full rounded-md bg-red-500 px-6 py-3 font-medium text-white hover:bg-red-600 transition duration-150 ease-in">
-                Place Order
-              </button>
-            </form>
+
+                <div>
+                  <label className="mt-4 mb-2 block text-sm font-medium">
+                    Address
+                  </label>
+                  <div className="flex flex-col sm:flex-row">
+                    <div className="relative flex-shrink-0 sm:w-7/12">
+                      <input
+                        {...register2("address", {
+                          required: "Address is required",
+                        })}
+                        type="text"
+                        className="w-full bg-black rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-red-500 focus:ring-red-500"
+                        placeholder="Street Address"
+                      />
+                      <div className="pointer-events-none absolute inset-y-0 left-0 inline-flex items-center px-3">
+                        <img
+                          className="h-5 w-5 object-contain"
+                          src="https://media.istockphoto.com/id/1132350508/photo/bangladesh-flag-on-canvas.jpg?s=612x612&w=0&k=20&c=QdNQjaEiY3sQy6x2PTI1YigXa-Fz_lBEC9wXZjsK-1o="
+                          alt=""
+                        />
+                      </div>
+                    </div>
+                    <input
+                      {...register2("state", {
+                        required: "state is required",
+                      })}
+                      type="text"
+                      className="w-full bg-black rounded-md border border-gray-200 px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 focus:border-red-500 focus:ring-red-500"
+                      placeholder="State"
+                    />
+                    <input
+                      {...register2("postalCode", {
+                        required: "postalCode is required",
+                      })}
+                      type="text"
+                      className="flex-shrink-0 bg-black rounded-md border border-gray-200 px-4 py-3 text-sm shadow-sm outline-none sm:w-1/6 focus:z-10 focus:border-red-500 focus:ring-red-500"
+                      placeholder="postalCode"
+                    />
+                  </div>
+                  {errors2.address && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors2.address?.message}
+                    </p>
+                  )}{" "}
+                  {errors.state && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors2.state?.message}
+                    </p>
+                  )}{" "}
+                  {errors2.postalCode && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors2.postalCode?.message}
+                    </p>
+                  )}
+                </div>
+                <div className="mt-6 border-t border-b py-2">
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm font-medium ">Subtotal</p>
+                    <p className="font-semibold ">{total}</p>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm font-medium ">Shipping</p>
+                    <p className="font-semibold ">0.00</p>
+                  </div>
+                </div>
+                <div className="mt-6 flex items-center justify-between">
+                  <p className="text-sm font-medium ">Total</p>
+                  <p className="text-2xl font-semibold ">{total}</p>
+                </div>
+                <button className="mt-4 mb-8 w-full rounded-md bg-red-500 px-6 py-3 font-medium text-white hover:bg-red-600 transition duration-150 ease-in">
+                  Place Order
+                </button>
+              </form>
+            )}
           </div>
         </div>
       )}

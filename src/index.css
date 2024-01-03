@@ -1,52 +1,50 @@
-@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@1,500&family=Poppins:wght@300;400;500;600;700&display=swap');
-@import 'animate.css';
+@import url("https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Pacifico&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@1,500&family=Poppins:wght@300;400;500;600;700&display=swap");
+@import "animate.css";
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    color: aliceblue;
-    font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: aliceblue;
+  font-family: "Poppins", sans-serif;
 }
 
 body {
-    background-color: #272829;
-    max-width: 1600px;
-    margin: 0 auto;
-
-   
+  background-color: #272829;
+  max-width: 1920px;
+  width: 100%;
+  margin: 0 auto;
 }
 
-.drawer-side{
-    overflow-x:hidden
-    
+.drawer-side {
+  overflow-x: hidden;
 }
 
 h2 {
-    font-family: 'Poppins', cursive;
+  font-family: "Poppins", cursive;
 }
 
 p {
-    font-family: 'Nunito', sans-serif;
+  font-family: "Nunito", sans-serif;
 }
 
 body::-webkit-scrollbar {
-    width: 8px;
+  width: 8px;
 }
 
 body::-webkit-scrollbar-track {
-    background: #0A0A0A;
+  background: #0a0a0a;
 }
 
 body::-webkit-scrollbar-thumb {
-    background-color: rgb(26, 26, 26);
-    border-radius: 20px;
-    /* border: 3px solid orange; */
+  background-color: rgb(26, 26, 26);
+  border-radius: 20px;
+  /* border: 3px solid orange; */
 }

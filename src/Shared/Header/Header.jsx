@@ -141,6 +141,7 @@ const Header = () => {
     // backdrop-filter backdrop-blur-xl
     <>
       <div
+      style={{ maxWidth: '1920px' }}
         className={
           scrolled
             ? " w-full flex  items-center justify-between z-10 h-20 fixed top-0 bg-[#232323] animate__animated animate__fadeInDown animate-fast opacity-0"
@@ -179,7 +180,7 @@ const Header = () => {
             </div>
             <Link
               to={"/"}
-              className="text-xl md:text-2xl xl:text-4xl font-bold "
+              className="text-xl md:text-2xl xl:text-4xl font-bold whitespace-nowrap"
             >
               Digital Card
             </Link>
